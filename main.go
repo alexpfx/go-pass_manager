@@ -8,4 +8,6 @@ import "github.com/alexpfx/go-pass_manager/cmd"
 
 func main() {
 	cmd.Execute()
+	
 }
+

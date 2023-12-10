@@ -7,5 +7,5 @@ import (
 )
 
 func Type(text string, delayMs int) (string, error){
-	return script.Exec(fmt.Sprintf("xdotool type --delay %d --clearmodifiers %s", delayMs, text)).String()
+	return script.Exec(fmt.Sprintf("xdotool type --delay %d --clearmodifiers '%s'", delayMs, text)).String()
 }

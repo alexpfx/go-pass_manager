@@ -43,6 +43,7 @@ var menuCmd = &cobra.Command{
 			rofi.Message(fmt.Sprintf("Erro: %s", err))
 			return
 		}
+				
 		_, err = xdotool.Type(ps, 55)
 		if err != nil {
 			rofi.Message(fmt.Sprintf("Erro: %s", err))

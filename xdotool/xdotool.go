@@ -6,6 +6,8 @@ import (
 	"github.com/bitfield/script"
 )
 
-func Type(text string, delayMs int) (string, error){
+func (x Xdotool) Type(text string, delayMs int) (string, error) {
 	return script.Exec(fmt.Sprintf("xdotool type --delay %d --clearmodifiers '%s'", delayMs, text)).String()
 }
+
+type Xdotool struct{}

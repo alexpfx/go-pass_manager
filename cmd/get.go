@@ -8,8 +8,9 @@ import (
 	"strings"
 
 	"github.com/alexpfx/go-pass_manager/pass"
+	"github.com/alexpfx/go-pass_manager/pm"
 	"github.com/alexpfx/go-pass_manager/rofi"
-	"github.com/alexpfx/go-pass_manager/xdotool"
+	"github.com/alexpfx/go-pass_manager/wtype"
 	"github.com/spf13/cobra"
 )
 
@@ -18,11 +19,13 @@ var debug bool
 
 // menuCmd represents the get command
 var menuCmd = &cobra.Command{
-	Use:   "menu",
+	Use:     "menu",
 	Aliases: []string{"m"},
-	Short: "Mostra um menu com a lista de senhas disponíveis",
-	Long: "",
+	Short:   "Mostra um menu com a lista de senhas disponíveis",
+	Long:    "",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		dmenuTool := getDmenuTool()
 		userHome, err := os.UserHomeDir()
 		if err != nil {
 			log.Fatal(err)
@@ -32,21 +35,23 @@ var menuCmd = &cobra.Command{
 
 		list, _ := pass.List(passStore)
 
-		s, err := rofi.Dmenu(strings.Join(list, "\n"))
+		s, err := dmenuTool.Dmenu(strings.Join(list, "\n"))
 		if err != nil {
-			rofi.Message(fmt.Sprintf("Erro: %s", err))
+			dmenuTool.Message(fmt.Sprintf("Erro ao mostrar menu: %s", err.Error()))
 			return
 		}
 
 		ps, err := pass.Show(s)
 		if err != nil {
-			rofi.Message(fmt.Sprintf("Erro: %s", err))
+			dmenuTool.Message(fmt.Sprintf("Erro ao obter senha: %s", err.Error()))
 			return
 		}
-				
-		_, err = xdotool.Type(ps, 55)
+
+		ttool := getTypeTool()
+
+		_, err = ttool.Type(ps, 100)
 		if err != nil {
-			rofi.Message(fmt.Sprintf("Erro: %s", err))
+			dmenuTool.Message(fmt.Sprintf("Erro ao digitar senha: %s", err.Error()))
 			return
 		}
 
@@ -57,6 +62,15 @@ var menuCmd = &cobra.Command{
 		return
 
 	},
+}
+
+func getTypeTool() pm.Typist {
+	// return xdotool.New()
+	return &wtype.WType{}
+}
+
+func getDmenuTool() pm.Menu {
+	return &rofi.Rofi{}
 }
 
 func init() {

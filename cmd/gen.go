@@ -10,7 +10,6 @@ import (
 
 	"github.com/alexpfx/go-pass_manager/pass"
 	"github.com/alexpfx/go-pass_manager/pm"
-	"github.com/alexpfx/go-pass_manager/rofi"
 	"github.com/spf13/cobra"
 )
 
@@ -32,11 +31,6 @@ var genCmd = &cobra.Command{
 	Use:   "gen",
 	Short: "Gera uma nova senha",
 	Run: func(cmd *cobra.Command, args []string) {
-		if test {
-			rofi.Dmenu("santos\n\nsao paulo\ngremio")
-
-			return
-		}
 
 		pm := pm.NewPass(letterCharset,
 			numberCharset, specialCharset, minUppercase, minLowercase, minDigits, minSpecials, size)

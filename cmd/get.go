@@ -32,22 +32,23 @@ var menuCmd = &cobra.Command{
 
 		list, _ := pass.List(passStore)
 
-		s, err := rofi.Dmenu(strings.Join(list, "\n"))
+		ps, err := rofi.Dmenu(strings.Join(list, "\n"))
 		if err != nil {
 			rofi.Message(fmt.Sprintf("Erro ao mostrar menu: %s", err.Error()))
 			return
 		}
 
-		ps, err := pass.Show(s)
+		out, err := pass.Show(ps)
 		if err != nil {
 			rofi.Message(fmt.Sprintf("Erro ao obter senha: %s", err.Error()))
 			return
 		}
 		ttool := linux.NewWType(linux.WTypeBuilder{
-			DelayBeforeKeyStrokes: "200",
+			DelayBetweenKeyStrokes: "50",
+			DelayBeforeKeyStrokes:  "200",
 		})
 
-		_, err = ttool.Run(ps)
+		_, err = ttool.Run(out)
 
 		if err != nil {
 			rofi.Message(fmt.Sprintf("Erro ao digitar senha: %s", err.Error()))
@@ -55,7 +56,7 @@ var menuCmd = &cobra.Command{
 		}
 
 		if debug {
-			log.Print(ps)
+			log.Print(out)
 		}
 
 		return

@@ -20,7 +20,8 @@ func Insert(password, name string, force bool) error {
 
 func Show(name string) (string, error) {
 	p := script.Exec(fmt.Sprintf("pass %s", name))
-	return p.String()
+	str, err := p.String()
+	return strings.TrimSpace(str), err
 }
 
 func List(storeDir string) ([]string, error) {

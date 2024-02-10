@@ -2,15 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/alexpfx/linux_wrappers/linux"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/alexpfx/go-pass_manager/pass"
-	"github.com/alexpfx/go-pass_manager/pm"
 	"github.com/alexpfx/go-pass_manager/rofi"
-	"github.com/alexpfx/go-pass_manager/wtype"
 	"github.com/spf13/cobra"
 )
 
@@ -24,8 +23,6 @@ var menuCmd = &cobra.Command{
 	Short:   "Mostra um menu com a lista de senhas disponíveis",
 	Long:    "",
 	Run: func(cmd *cobra.Command, args []string) {
-
-		dmenuTool := getDmenuTool()
 		userHome, err := os.UserHomeDir()
 		if err != nil {
 			log.Fatal(err)
@@ -35,23 +32,25 @@ var menuCmd = &cobra.Command{
 
 		list, _ := pass.List(passStore)
 
-		s, err := dmenuTool.Dmenu(strings.Join(list, "\n"))
+		s, err := rofi.Dmenu(strings.Join(list, "\n"))
 		if err != nil {
-			dmenuTool.Message(fmt.Sprintf("Erro ao mostrar menu: %s", err.Error()))
+			rofi.Message(fmt.Sprintf("Erro ao mostrar menu: %s", err.Error()))
 			return
 		}
 
 		ps, err := pass.Show(s)
 		if err != nil {
-			dmenuTool.Message(fmt.Sprintf("Erro ao obter senha: %s", err.Error()))
+			rofi.Message(fmt.Sprintf("Erro ao obter senha: %s", err.Error()))
 			return
 		}
+		ttool := linux.NewWType(linux.WTypeBuilder{
+			DelayBeforeKeyStrokes: "200",
+		})
 
-		ttool := getTypeTool()
+		_, err = ttool.Run(ps)
 
-		_, err = ttool.Type(ps, 100)
 		if err != nil {
-			dmenuTool.Message(fmt.Sprintf("Erro ao digitar senha: %s", err.Error()))
+			rofi.Message(fmt.Sprintf("Erro ao digitar senha: %s", err.Error()))
 			return
 		}
 
@@ -62,15 +61,6 @@ var menuCmd = &cobra.Command{
 		return
 
 	},
-}
-
-func getTypeTool() pm.Typist {
-	// return xdotool.New()
-	return &wtype.WType{}
-}
-
-func getDmenuTool() pm.Menu {
-	return &rofi.Rofi{}
 }
 
 func init() {

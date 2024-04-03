@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var print bool
+var list bool = false
 var debug bool
 
 // menuCmd represents the get command
@@ -24,15 +24,25 @@ var menuCmd = &cobra.Command{
 	Long:    "",
 	Run: func(cmd *cobra.Command, args []string) {
 		userHome, err := os.UserHomeDir()
+		fmt.Println(userHome)
 		if err != nil {
 			log.Fatal(err)
 
 		}
 		passStore := filepath.Join(userHome, ".password-store")
 
-		list, _ := pass.List(passStore)
+		passlist, err := pass.List(passStore)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-		ps, err := rofi.Dmenu(strings.Join(list, "\n"))
+		jlist := strings.Join(passlist, "\n")
+		if list {
+			fmt.Println("jlist")
+			fmt.Println(jlist)
+			return
+		}
+		ps, err := rofi.Dmenu(jlist)
 		if err != nil {
 			rofi.Message(fmt.Sprintf("Erro ao mostrar menu: %s", err.Error()))
 			return
@@ -67,5 +77,6 @@ var menuCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(menuCmd)
 	menuCmd.Flags().BoolVarP(&debug, "debug", "d", false, "Imprime informações de debug")
+	menuCmd.Flags().BoolVar(&list, "list", false, "Apenas lista o menu na stdout")
 
 }

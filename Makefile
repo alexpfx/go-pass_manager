@@ -1,8 +1,4 @@
 install:
 	go mod tidy
 	go mod download
-	CGO_ENABLED=0 sudo go build -o /usr/local/bin/pm
-
-
-
-
+	CGO_ENABLED=0 go build -o $(HOME)/go/bin/pm

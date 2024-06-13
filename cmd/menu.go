@@ -52,7 +52,7 @@ var menuCmd = &cobra.Command{
 
 		out, err := pass.Show(ps)
 		if err != nil {
-			rofi.Messexage(fmt.Sprintf("Erro ao obter senha: %s", err.Error()))
+			rofi.Message(fmt.Sprintf("Erro ao obter senha: %s", err.Error()))
 			return
 		}
 

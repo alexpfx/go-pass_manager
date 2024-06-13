@@ -2,19 +2,21 @@ package rofi
 
 import (
 	"fmt"
+	"github.com/alexpfx/linux_wrappers/wrappers/rofi"
 	"strings"
-
-	"github.com/alexpfx/linux_wrappers/linux"
 )
 
 func Dmenu(menu string) (string, error) {
-	r := linux.NewDMenu("Escolha a senha")
-	s, err := r.Run(menu)
-	return strings.TrimSpace(s), err
+	r := rofi.New("Escolha a Senha")
+	out, err := r.ShowDMenu(menu)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out), err
 }
 
 func Message(msg string) (string, error) {
 	fmt.Println(msg)
-	r := linux.NewMessageMenu(msg)
-	return r.Run(msg)
+	r := rofi.NewMessage(msg)
+	return r.ShowDMenu(msg)
 }

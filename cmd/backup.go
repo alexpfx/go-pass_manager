@@ -41,8 +41,8 @@ var backupCmd = &cobra.Command{
 				scanner := bufio.NewScanner(f)
 				for scanner.Scan() {
 					splitted := strings.Split(scanner.Text(), ":")
-					pn := splitted[0]
-					p := splitted[1]
+					pn := strings.TrimSpace(splitted[0])
+					p := strings.TrimSpace(splitted[1])
 					err := pass.Insert(p, pn, false)
 					if err != nil {
 						log.Print(err)

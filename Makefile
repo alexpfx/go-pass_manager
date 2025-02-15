@@ -1,6 +1,6 @@
 BINARY_NAME=$(HOME)/go/bin/pm
 
-VERSION=v1.0.0
+VERSION=v1.0.2
 COMMIT=$(shell git rev-parse --short HEAD)
 DATE=$(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 

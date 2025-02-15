@@ -88,7 +88,7 @@ var menuCmd = &cobra.Command{
 			log.Print(out)
 		}
 
-		return
+		
 
 	},
 }

@@ -1,6 +1,6 @@
 module github.com/alexpfx/go-pass_manager
 
-go 1.21.6
+go 1.27.3
 
 require (
 	github.com/alexpfx/linux_wrappers v0.0.12
